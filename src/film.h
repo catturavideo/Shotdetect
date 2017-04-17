@@ -116,7 +116,6 @@ class film {
 
   void do_stats(int frame);
   void get_yuv_colors(AVFrame &pFrame);
-  void CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);
   void save_shot_with_frames(AVFrame *pFrame, AVFrame* pFramePrev, bool last_shot);
   void free_frame_list();
   void pop_frame_list_front();
@@ -204,6 +203,8 @@ class film {
   xml *x;
   bool display;
 
+  void CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);  
+  
   int process();
   void process_audio();
   void shotlog(string message);
