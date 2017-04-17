@@ -203,7 +203,7 @@ class film {
   xml *x;
   bool display;
 
-  void CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);  
+  bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);  
   
   int process();
   void process_audio();

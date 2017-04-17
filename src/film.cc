@@ -111,7 +111,7 @@ void film::get_yuv_colors(AVFrame &pFrame) {
  * If a shot is detected, this function also creates the image files
  * for this scene cut.
  */
-void film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
+bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
   int x;
   int y;
   int diff;
@@ -172,6 +172,7 @@ void film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
 
   if ((diff > this->threshold) && (score > this->threshold)) {
     save_shot_with_frames(pFrame, pFramePrev, false);
+    return true;
   }
 
   int frame_number = pCodecCtx->frame_number;
@@ -182,7 +183,10 @@ void film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
       cerr << "Maximum shot length reached. Saving..." << endl;
     #endif
     save_shot_with_frames(pFrame, pFramePrev, false);
+    return true;
   }
+  
+  return false;
 }
 
 
