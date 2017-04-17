@@ -311,6 +311,12 @@ void film::update_metadata() {
   duration.mins %= 60;
 }
 
+void film::set_metadata_from_frame(AVFrame* pFrame)
+{
+    this->height = pFrame->height;
+    this->width = pFrame->width;
+}
+
 void film::shotlog(string message) {
 #ifdef WXWIDGETS
   if (display) {

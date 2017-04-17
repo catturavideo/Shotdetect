@@ -204,6 +204,7 @@ class film {
   bool display;
 
   bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);  
+  void set_metadata_from_frame(AVFrame *pFrame);
   
   int process();
   void process_audio();
