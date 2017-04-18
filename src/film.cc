@@ -112,7 +112,7 @@ void film::get_yuv_colors(AVFrame &pFrame) {
  * for this scene cut.
  */
 bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
-    return CompareFrame(pFrame, pFramePrev, current_frame_number + 1);
+  return CompareFrame(pFrame, pFramePrev, current_frame_number + 1);
 }
 
 bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) {
@@ -128,7 +128,11 @@ bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) 
   int c1prev, c2prev, c3prev;
   int score;
   score = 0;
-
+  
+  if (width < 1 && height < 1) {
+      set_metadata_from_frame(pFrame);
+  }  
+  
   // IDEA! Split image in slices and calculate score per-slice.
   // This would allow to detect areas on the image which have stayed
   // the same, and (a) increase score if all areas have changed
