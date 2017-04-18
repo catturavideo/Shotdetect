@@ -111,7 +111,12 @@ void film::get_yuv_colors(AVFrame &pFrame) {
  * If a shot is detected, this function also creates the image files
  * for this scene cut.
  */
+bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
+    return CompareFrame(pFrame, pFramePrev, current_frame_number + 1);
+}
+
 bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) {
+  current_frame_number = frame_number;
   int x;
   int y;
   int diff;
@@ -703,7 +708,8 @@ film::film() {
   nchannel = 1;
   audio_buf = NULL;
   flip = true;
-
+  current_frame_number = 0;
+  
   this->first_img_set = false;
   this->last_img_set = false;
   this->audio_set = false;

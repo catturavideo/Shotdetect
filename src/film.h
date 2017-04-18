@@ -67,6 +67,7 @@ class film {
   bool middle_img_set;
   bool audio_set;
   bool video_set;
+  int current_frame_number;
 
   unsigned int ech;
   signed short int minright;
@@ -203,6 +204,7 @@ class film {
   xml *x;
   bool display;
 
+  bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);
   bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number);  
   void set_metadata_from_frame(AVFrame *pFrame);
   
