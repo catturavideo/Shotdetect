@@ -116,7 +116,7 @@ class film {
 
   void do_stats(int frame);
   void get_yuv_colors(AVFrame &pFrame);
-  void save_shot_with_frames(AVFrame *pFrame, AVFrame* pFramePrev, bool last_shot);
+  void save_shot_with_frames(AVFrame *pFrame, AVFrame* pFramePrev, int frame_number, bool last_shot);
   void free_frame_list();
   void pop_frame_list_front();
   graph *g;
@@ -203,7 +203,7 @@ class film {
   xml *x;
   bool display;
 
-  bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);  
+  bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number);  
   void set_metadata_from_frame(AVFrame *pFrame);
   
   int process();

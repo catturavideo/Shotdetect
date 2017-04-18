@@ -111,7 +111,7 @@ void film::get_yuv_colors(AVFrame &pFrame) {
  * If a shot is detected, this function also creates the image files
  * for this scene cut.
  */
-bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
+bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) {
   int x;
   int y;
   int diff;
@@ -171,18 +171,17 @@ bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev) {
   g->push_rgb_to_hsv(c1tot, c2tot, c3tot);
 
   if ((diff > this->threshold) && (score > this->threshold)) {
-    save_shot_with_frames(pFrame, pFramePrev, false);
+    save_shot_with_frames(pFrame, pFramePrev, frame_number, false);
     return true;
   }
-
-  int frame_number = pCodecCtx->frame_number;
+  
   int current_shot_f_duration = frame_number - shots.back().fbegin;
   int current_shot_ms_duration = int(current_shot_f_duration * 1000 / fps);
   if (current_shot_ms_duration > this->max_shot_ms_duration) {
     #ifdef DEBUG
       cerr << "Maximum shot length reached. Saving..." << endl;
     #endif
-    save_shot_with_frames(pFrame, pFramePrev, false);
+    save_shot_with_frames(pFrame, pFramePrev, frame_number, false);
     return true;
   }
   
@@ -215,8 +214,7 @@ void film::free_frame_list(void) {
 /*
 * Saves detected shot and writes selected frames as image files
 */
-void film::save_shot_with_frames(AVFrame* pFrame, AVFrame* pFramePrev, bool last_shot) {
-  int frame_number = pCodecCtx->frame_number;
+void film::save_shot_with_frames(AVFrame* pFrame, AVFrame* pFramePrev, int frame_number, bool last_shot) {
   shots.back().fduration = frame_number - shots.back().fbegin;
   shots.back().msduration = int(((shots.back().fduration) * 1000) / fps);
 
@@ -502,7 +500,7 @@ int film::process() {
           if (flip) {
             pop_frame_list_front();
           }
-          CompareFrame(pFrameRGB, pFrameRGBprev);
+          CompareFrame(pFrameRGB, pFrameRGBprev, frame_number);
         } else {
           /*
            * Cas ou c'est la premiere image, on cree la premiere image dans tous
@@ -540,7 +538,7 @@ int film::process() {
   }
 
   if (videoStream != -1) {
-    save_shot_with_frames(pFrameRGB, pFrameRGBprev, true);
+    save_shot_with_frames(pFrameRGB, pFrameRGBprev, pCodecCtx->frame_number, true);
     /*
      * Graph 'quantity of movement'
      */
