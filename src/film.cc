@@ -348,7 +348,11 @@ void film::save_first_shot(AVFrame* pFrame) {
   s.msbegin = 0;
   s.myid = 0;
   shots.push_back(s);
-      
+  
+  if (width < 1 && height < 1) {
+      set_metadata_from_frame(pFrame);
+  }  
+  
   image *begin_i = new image(this, width, height, s.myid, BEGIN,
                              this->thumb_set, this->shot_set);
   begin_i->create_img_dir();
