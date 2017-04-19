@@ -204,6 +204,7 @@ class film {
   xml *x;
   bool display;
 
+  void save_first_shot(AVFrame *pFrame);
   bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev);
   bool CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number);  
   void set_metadata_from_frame(AVFrame *pFrame);

@@ -342,10 +342,32 @@ void film::shotlog(string message) {
   }
 }
 
+void film::save_first_shot(AVFrame* pFrame) {
+  shot s;    
+  s.fbegin = 0;
+  s.msbegin = 0;
+  s.myid = 0;
+  shots.push_back(s);
+      
+  image *begin_i = new image(this, width, height, s.myid, BEGIN,
+                             this->thumb_set, this->shot_set);
+  begin_i->create_img_dir();
+  
+#ifdef WXWIDGETS
+  if (this->first_img_set ||
+     (display && dialogParent->checkbox_1->GetValue()))
+#else
+  if (this->first_img_set)
+#endif
+  {
+    begin_i->SaveFrame(pFrame, 1);
+    shots.back().img_begin = begin_i;
+  }
+}
+
 int film::process() {
   int audioSize;
   int frameFinished;
-  shot s;
   static struct SwsContext *img_convert_ctx = NULL;
   int frame_number;
 
@@ -439,14 +461,6 @@ int film::process() {
     // RGB:
     avpicture_alloc((AVPicture *)pFrameRGB, PIX_FMT_RGB24, width, height);
     avpicture_alloc((AVPicture *)pFrameRGBprev, PIX_FMT_RGB24, width, height);
-
-    /*
-     * Mise en place du premier plan
-     */
-    s.fbegin = 0;
-    s.msbegin = 0;
-    s.myid = 0;
-    shots.push_back(s);
   }
 
 #ifdef WXWIDGETS
@@ -517,20 +531,7 @@ int film::process() {
            * Cas ou c'est la premiere image, on cree la premiere image dans tous
            * les cas
            */
-          image *begin_i = new image(this, width, height, s.myid, BEGIN,
-                                     this->thumb_set, this->shot_set);
-          begin_i->create_img_dir();
-
-#ifdef WXWIDGETS
-          if (this->first_img_set ||
-              (display && dialogParent->checkbox_1->GetValue()))
-#else
-          if (this->first_img_set)
-#endif
-          {
-            begin_i->SaveFrame(pFrameRGB, frame_number);
-            shots.back().img_begin = begin_i;
-          }
+          save_first_shot(pFrameRGB);
         }
         /* Copy current frame as "previous" for next round */
         av_picture_copy((AVPicture *)pFrameRGBprev, (AVPicture *)pFrameRGB,
