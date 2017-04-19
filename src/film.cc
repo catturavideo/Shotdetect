@@ -131,7 +131,7 @@ bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) 
   
   if (width < 1 && height < 1) {
       set_metadata_from_frame(pFrame);
-  }  
+  }
   
   // IDEA! Split image in slices and calculate score per-slice.
   // This would allow to detect areas on the image which have stayed
@@ -175,9 +175,11 @@ bool film::CompareFrame(AVFrame *pFrame, AVFrame *pFramePrev, int frame_number) 
   /*
    * Store gathered data
    */
-  g->push_data(score);
-  g->push_rgb(c1tot, c2tot, c3tot);
-  g->push_rgb_to_hsv(c1tot, c2tot, c3tot);
+  if (g) {
+    g->push_data(score);
+    g->push_rgb(c1tot, c2tot, c3tot);
+    g->push_rgb_to_hsv(c1tot, c2tot, c3tot);
+  }
 
   if ((diff > this->threshold) && (score > this->threshold)) {
     save_shot_with_frames(pFrame, pFramePrev, frame_number, false);
@@ -713,6 +715,9 @@ film::film() {
   audio_buf = NULL;
   flip = true;
   current_frame_number = 0;
+  width = 0;
+  height = 0;
+  g = NULL;
   
   this->first_img_set = false;
   this->last_img_set = false;
