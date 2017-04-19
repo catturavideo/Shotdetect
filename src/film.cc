@@ -481,7 +481,7 @@ int film::process() {
           if (!img_convert_ctx) {
             fprintf(stderr,
                     "Cannot initialize the converted RGB image context!\n");
-            exit(1);
+            return -1;
           }
         }
 
@@ -584,11 +584,11 @@ int film::process() {
   return 0;
 }
 
-void film::init_xml(string filename) {
+int film::init_xml(string filename) {
   fd_xml_audio = fopen(filename.c_str(), "w+");
   if (fd_xml_audio == NULL) {
     printf("Impossible to open xml audio file %s.", filename.c_str());
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
   // FIXME: This may produce an uncaught segmentation fault if the output path
   // doesn't exist:
@@ -596,6 +596,7 @@ void film::init_xml(string filename) {
           "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<iri>\n<sound "
           "sampling=\"%d\" nchannels=\"%d\">",
           samplearg, nchannel);
+  return 0;
 }
 
 int film::close_xml() {

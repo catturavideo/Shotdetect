@@ -81,7 +81,7 @@ int image::SaveFrame(AVFrame *pFrame, int frame_number) {
    */
   if ((void *)(im = gdImageCreateTrueColor(width, height)) == NULL) {
     cerr << "Problem Creating True color IMG" << endl;
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
 
   /*
@@ -89,7 +89,7 @@ int image::SaveFrame(AVFrame *pFrame, int frame_number) {
    */
   if ((void *)(miniim = gdImageCreateTrueColor(width_s, height_s)) == NULL) {
     cerr << "Problem Creating True color IMG" << endl;
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
 
   for (y = 0; y < height; y++) {
@@ -138,7 +138,7 @@ int image::SaveFrame(AVFrame *pFrame, int frame_number) {
     if ((minijpgout = fopen(str.str().c_str(), "wb")) == NULL) {
       cerr << str.str() << endl;
       perror("shotdetect ");
-      exit(EXIT_FAILURE);
+      return EXIT_FAILURE;
     }
     gdImageCopyResized(miniim, im, 0, 0, 0, 0, width_s, height_s, width,
                        height);
@@ -168,7 +168,7 @@ int image::SaveFrame(AVFrame *pFrame, int frame_number) {
     if ((jpgout = fopen(str.str().c_str(), "wb")) == NULL) {
       cerr << str.str() << endl;
       perror("shotdetect ");
-      exit(EXIT_FAILURE);
+      return EXIT_FAILURE;
     }
     gdImageJpeg(im, jpgout, 90);
     fclose(jpgout);

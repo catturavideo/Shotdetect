@@ -123,7 +123,7 @@ class film {
   graph *g;
 
   void update_metadata();
-  void init_xml(string filename);
+  int init_xml(string filename);
   int close_xml();
 
  public:
